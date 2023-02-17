@@ -1,11 +1,12 @@
 <template>
-  <main>
+  <main :class="{ light: lightMode }">
     <header>
       <h1>TODO</h1>
       <div class="mode">
         <img
           src="./assets/Frontend-mentor/images/icon-sun.svg"
           alt="sun icon"
+          @click="toggleDarkMode"
         />
       </div>
     </header>
@@ -34,14 +35,14 @@
           <div class="title-check">
             <button class="checkbox" @click="doneItem(item.id)"></button>
             <h2>{{ item.title }}</h2>
-            <p>completed: {{ item.completed }}</p>
           </div>
           <button class="cross" @click="deleteItem">
             <img src="./assets/Frontend-mentor/images/icon-cross.svg" alt="" />
           </button>
         </div>
         <div class="todos-footer">
-          <p>{{ items.length }} items left</p>
+          <p>{{ items.filter((item) => !item.completed).length }} items left</p>
+
           <button class="clear" @click="clearCompletedItems">
             clear completed
           </button>
@@ -49,9 +50,9 @@
       </div>
 
       <div class="bottom-sort">
-        <p>All</p>
-        <p>Active</p>
-        <p>Completed</p>
+        <p @click="showAll">All</p>
+        <p @click="showActive">Active</p>
+        <p @click="showCompleted">Completed</p>
       </div>
     </div>
 
@@ -59,7 +60,7 @@
       Challenge by
       <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
         >Frontend Mentor</a
-      >. Coded by <a href="#">Your Name Here</a>.
+      >. Coded by <a href="https://github.com/JustKooba">JustKooba</a>.
     </div>
   </main>
 </template>
@@ -71,6 +72,8 @@ export default {
       itemsLeft: null,
       newItem: "",
       items: [],
+      originalItems: [],
+      lightMode: false,
     };
   },
   methods: {
@@ -91,9 +94,23 @@ export default {
     },
 
     clearCompletedItems() {
+      this.items = this.originalItems.filter((item) => !item.completed);
       this.items = this.items.filter((item) => !item.completed);
     },
 
+    showActive() {
+      this.items = this.originalItems.filter((item) => !item.completed);
+    },
+    showCompleted() {
+      this.items = this.originalItems.filter((item) => item.completed);
+    },
+    showAll() {
+      this.items = [...this.originalItems];
+    },
+
+    toggleDarkMode() {
+      this.lightMode = !this.lightMode;
+    },
     deleteItem(id) {
       const index = this.items.findIndex((el) => el.id === id);
       this.items.splice(index, 1);
@@ -104,6 +121,7 @@ export default {
   },
   created() {
     this.items = JSON.parse(localStorage.getItem("items")) || [];
+    this.originalItems = [...this.items];
   },
 };
 </script>
@@ -279,5 +297,21 @@ button {
   padding: 10px;
   color: var(--Dark-Grayish-Blue);
   font-weight: 700;
+}
+
+.light {
+  background-color: #fff;
+  color: black;
+}
+
+@media (min-width: 767px) {
+  .container {
+    width: 400px;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>
