@@ -12,34 +12,47 @@
 
     <div class="container">
       <div class="input-container">
-        <button class="checkbox" disabled="true"></button>
-        <input
-          class="todo-new"
-          type="text"
-          name="todo create"
-          placeholder="Create a new todo..."
-        />
+        <button class="checkbox" @click="addItem"></button>
+        <form @submit="addItem">
+          <input
+            class="todo-new"
+            type="text"
+            name="todo create"
+            placeholder="Create a new todo..."
+            v-model="newItem"
+          />
+        </form>
       </div>
       <div class="todos">
         <div
           class="item"
           v-for="item in items"
           v-bind:item="item"
+          :class="{ completed: item.completed }"
           v-bind:key="item.id"
         >
           <div class="title-check">
-            <button class="checkbox"></button>
+            <button class="checkbox" @click="doneItem(item.id)"></button>
             <h2>{{ item.title }}</h2>
+            <p>completed: {{ item.completed }}</p>
           </div>
-          <button class="cross">
+          <button class="cross" @click="deleteItem">
             <img src="./assets/Frontend-mentor/images/icon-cross.svg" alt="" />
           </button>
         </div>
+        <div class="todos-footer">
+          <p>{{ items.length }} items left</p>
+          <button class="clear" @click="clearCompletedItems">
+            clear completed
+          </button>
+        </div>
       </div>
-      <!--Dynamic Num-->
 
-      <div class="todos-footer">items left clear completed</div>
-      <div class="bottom-sort">Completed All Active</div>
+      <div class="bottom-sort">
+        <p>All</p>
+        <p>Active</p>
+        <p>Completed</p>
+      </div>
     </div>
 
     <div class="attribution">
@@ -55,12 +68,42 @@
 export default {
   data() {
     return {
+      itemsLeft: null,
       newItem: "",
-      items: [
-        { title: "Todo", completed: false, id: 1 },
-        { title: "New todo", completed: false, id: 2 },
-      ],
+      items: [],
     };
+  },
+  methods: {
+    addItem() {
+      if (this.newItem.trim().length === 0) {
+        return;
+      }
+      this.items.push({
+        title: this.newItem,
+        completed: false,
+        id: Math.random(),
+      });
+      this.newItem = "";
+    },
+    doneItem(id) {
+      const item = this.items.find((el) => el.id === id);
+      item.completed = !item.completed;
+    },
+
+    clearCompletedItems() {
+      this.items = this.items.filter((item) => !item.completed);
+    },
+
+    deleteItem(id) {
+      const index = this.items.findIndex((el) => el.id === id);
+      this.items.splice(index, 1);
+    },
+  },
+  updated() {
+    localStorage.setItem("items", JSON.stringify(this.items));
+  },
+  created() {
+    this.items = JSON.parse(localStorage.getItem("items")) || [];
   },
 };
 </script>
@@ -138,9 +181,16 @@ header {
   display: flex;
   padding: 7px;
   display: flex;
-  justify-content: center;
   align-content: center;
   margin-top: 30px;
+}
+
+a {
+  color: #fff;
+}
+
+.attribution {
+  margin-top: 20px;
 }
 
 .todo-new {
@@ -172,6 +222,7 @@ header {
 
 .completed {
   text-decoration: line-through;
+  color: var(--Dark-Grayish-Blue);
 }
 
 .item {
@@ -202,5 +253,31 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.todos-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.todos-footer button {
+  font-family: inherit;
+  background-color: transparent;
+  border: none;
+  color: var(--Light-Grayish-Blue);
+}
+
+.bottom-sort {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bottom-sort p {
+  padding: 10px;
+  color: var(--Dark-Grayish-Blue);
+  font-weight: 700;
 }
 </style>
