@@ -47,7 +47,12 @@
           v-bind:key="item.id"
         >
           <div class="title-check">
-            <button class="checkbox" @click="doneItem(item.id)"></button>
+            <button
+              class="checkbox"
+              @click="doneItem(item.id)"
+              :class="{ active: isButtonClicked }"
+              v-on:click="isButtonClicked = !isButtonClicked"
+            ></button>
             <h2>{{ item.title }}</h2>
           </div>
           <button class="cross" @click="deleteItem">
@@ -80,8 +85,8 @@
 
     <div class="attribution">
       Challenge by
-      <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
-        >Frontend Mentor</a
+      <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">
+        Frontend Mentor</a
       >. Coded by <a href="https://github.com/JustKooba">JustKooba</a>.
     </div>
   </main>
@@ -96,6 +101,7 @@ export default {
       items: [],
       originalItems: [],
       isDarkMode: true,
+      isButtonClicked: false,
     };
   },
   methods: {
@@ -113,6 +119,7 @@ export default {
     doneItem(id) {
       const item = this.items.find((el) => el.id === id);
       item.completed = !item.completed;
+      this.completedBtn = !this.completedBtn;
     },
 
     clearCompletedItems() {
@@ -233,6 +240,9 @@ a {
 
 .attribution {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .todo-new {
@@ -246,7 +256,7 @@ a {
 }
 
 .checkbox {
-  background-color: transparent !important;
+  background-color: transparent;
   border: 1px solid var(--Very-Dark-Grayish-Blue);
   width: 25px;
   height: 25px;
@@ -332,6 +342,10 @@ button {
 
 .darkIcon {
   background-image: url("./assets/Frontend-mentor/images/icon-moon.svg");
+}
+
+.active {
+  background: linear-gradient(hsl(192, 100%, 67%) to hsl(280, 87%, 65%));
 }
 
 @media (min-width: 767px) {
