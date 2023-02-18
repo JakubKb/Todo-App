@@ -1,5 +1,5 @@
 <template>
-  <main :class="{ light: lightMode }">
+  <main>
     <header>
       <h1>TODO</h1>
       <div class="mode">
@@ -7,15 +7,24 @@
           src="./assets/Frontend-mentor/images/icon-sun.svg"
           alt="sun icon"
           @click="toggleDarkMode"
+          :class="{ darkIcon }"
         />
       </div>
     </header>
 
     <div class="container">
-      <div class="input-container">
+      <div
+        class="input-container"
+        :style="{
+          'background-color': isDarkMode ? 'hsl(235, 24%, 19%)' : 'white',
+        }"
+      >
         <button class="checkbox" @click="addItem"></button>
         <form @submit="addItem">
           <input
+            :style="{
+              'background-color': isDarkMode ? 'hsl(235, 24%, 19%)' : 'white',
+            }"
             class="todo-new"
             type="text"
             name="todo create"
@@ -24,7 +33,12 @@
           />
         </form>
       </div>
-      <div class="todos">
+      <div
+        class="todos"
+        :style="{
+          'background-color': isDarkMode ? 'hsl(235, 24%, 19%)' : 'white',
+        }"
+      >
         <div
           class="item"
           v-for="item in items"
@@ -40,7 +54,12 @@
             <img src="./assets/Frontend-mentor/images/icon-cross.svg" alt="" />
           </button>
         </div>
-        <div class="todos-footer">
+        <div
+          class="todos-footer"
+          :style="{
+            'background-color': isDarkMode ? 'hsl(235, 24%, 19%)' : 'white',
+          }"
+        >
           <p>{{ items.filter((item) => !item.completed).length }} items left</p>
 
           <button class="clear" @click="clearCompletedItems">
@@ -49,7 +68,10 @@
         </div>
       </div>
 
-      <div class="bottom-sort">
+      <div
+        class="bottom-sort"
+        :style="{ 'background-color': isDarkMode ? '' : 'white' }"
+      >
         <p @click="showAll">All</p>
         <p @click="showActive">Active</p>
         <p @click="showCompleted">Completed</p>
@@ -73,7 +95,7 @@ export default {
       newItem: "",
       items: [],
       originalItems: [],
-      lightMode: false,
+      isDarkMode: true,
     };
   },
   methods: {
@@ -94,10 +116,9 @@ export default {
     },
 
     clearCompletedItems() {
-      this.items = this.originalItems.filter((item) => !item.completed);
       this.items = this.items.filter((item) => !item.completed);
+      localStorage.deleteItem("item.completed", JSON.stringify(this.items));
     },
-
     showActive() {
       this.items = this.originalItems.filter((item) => !item.completed);
     },
@@ -109,7 +130,10 @@ export default {
     },
 
     toggleDarkMode() {
-      this.lightMode = !this.lightMode;
+      document.body.classList.toggle("light");
+      this.isDarkMode = !this.isDarkMode;
+      this.darkIcon = !this.darkIcon;
+      document.body.back.toggle("dark");
     },
     deleteItem(id) {
       const index = this.items.findIndex((el) => el.id === id);
@@ -204,7 +228,7 @@ header {
 }
 
 a {
-  color: #fff;
+  color: rgb(0, 132, 255);
 }
 
 .attribution {
@@ -291,17 +315,23 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 7px;
 }
 
 .bottom-sort p {
   padding: 10px;
   color: var(--Dark-Grayish-Blue);
   font-weight: 700;
+  cursor: pointer;
 }
 
 .light {
-  background-color: #fff;
+  background-color: var(--Very-Light-Grayish-Blue);
   color: black;
+}
+
+.darkIcon {
+  background-image: url("./assets/Frontend-mentor/images/icon-moon.svg");
 }
 
 @media (min-width: 767px) {
