@@ -2,14 +2,12 @@
   <main>
     <header>
       <h1>TODO</h1>
-      <div class="mode">
-        <img
-          src="./assets/Frontend-mentor/images/icon-sun.svg"
-          alt="sun icon"
-          @click="toggleDarkMode"
-          :class="{ darkIcon }"
-        />
-      </div>
+      <div
+        class="mode"
+        alt="sun icon"
+        @click="toggleDarkMode"
+        :class="{ darkIcon }"
+      ></div>
     </header>
 
     <div class="container">
@@ -124,7 +122,6 @@ export default {
 
     clearCompletedItems() {
       this.items = this.items.filter((item) => !item.completed);
-      localStorage.deleteItem("item.completed", JSON.stringify(this.items));
     },
     showActive() {
       this.items = this.originalItems.filter((item) => !item.completed);
@@ -141,6 +138,10 @@ export default {
       this.isDarkMode = !this.isDarkMode;
       this.darkIcon = !this.darkIcon;
       document.body.back.toggle("dark");
+      if (document.body.classList.contains("light")) {
+        document.body.style.backgroundImage =
+          "url(./assets/Frontend-mentor/images/bg-mobile-light.jpg)";
+      }
     },
     deleteItem(id) {
       const index = this.items.findIndex((el) => el.id === id);
@@ -320,6 +321,14 @@ button {
   color: var(--Light-Grayish-Blue);
 }
 
+.mode {
+  height: 50px;
+  width: 50px;
+  background-repeat: no-repeat;
+  background-image: url("./assets/Frontend-mentor/images/icon-sun.svg");
+  cursor: pointer;
+}
+
 .bottom-sort {
   padding: 10px;
   display: flex;
@@ -333,6 +342,10 @@ button {
   color: var(--Dark-Grayish-Blue);
   font-weight: 700;
   cursor: pointer;
+}
+
+.bottom-sort p:focus {
+  color: var(--Bright-Blue);
 }
 
 .light {
@@ -353,6 +366,7 @@ button {
     width: 400px;
   }
   body {
+    background-image: url("./assets/Frontend-mentor/images/bg-desktop-dark.jpg");
     display: flex;
     justify-content: center;
     align-items: center;
