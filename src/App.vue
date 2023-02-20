@@ -137,11 +137,7 @@ export default {
       document.body.classList.toggle("light");
       this.isDarkMode = !this.isDarkMode;
       this.darkIcon = !this.darkIcon;
-      document.body.back.toggle("dark");
-      if (document.body.classList.contains("light")) {
-        document.body.style.backgroundImage =
-          "url(./assets/Frontend-mentor/images/bg-mobile-light.jpg)";
-      }
+      document.body.classList.toggle("dark");
     },
     deleteItem(id) {
       const index = this.items.findIndex((el) => el.id === id);
@@ -351,6 +347,7 @@ button {
 .light {
   background-color: var(--Very-Light-Grayish-Blue);
   color: black;
+  background-image: url("./assets/Frontend-mentor/images/bg-mobile-light.jpg");
 }
 
 .darkIcon {
@@ -370,6 +367,11 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .light {
+    background-color: var(--Very-Light-Grayish-Blue);
+    color: black;
+    background-image: url("./assets/Frontend-mentor/images/bg-desktop-light.jpg");
   }
 }
 </style>
